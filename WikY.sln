@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WikY", "WikY.csproj", "{44B33F04-D4A6-4080-BDB9-71F91C283A3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WikYRepositories", "WikYRepositories\WikYRepositories.csproj", "{EADC6E66-9CC8-46ED-ACF4-F0246CBCB62F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WikYModels", "WikYModels\WikYModels.csproj", "{8926B00F-D717-45D6-B023-EC3FCC1E6BCC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{44B33F04-D4A6-4080-BDB9-71F91C283A3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44B33F04-D4A6-4080-BDB9-71F91C283A3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44B33F04-D4A6-4080-BDB9-71F91C283A3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44B33F04-D4A6-4080-BDB9-71F91C283A3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EADC6E66-9CC8-46ED-ACF4-F0246CBCB62F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EADC6E66-9CC8-46ED-ACF4-F0246CBCB62F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EADC6E66-9CC8-46ED-ACF4-F0246CBCB62F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EADC6E66-9CC8-46ED-ACF4-F0246CBCB62F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8926B00F-D717-45D6-B023-EC3FCC1E6BCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8926B00F-D717-45D6-B023-EC3FCC1E6BCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8926B00F-D717-45D6-B023-EC3FCC1E6BCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8926B00F-D717-45D6-B023-EC3FCC1E6BCC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0A17F4B7-46D4-4323-8DA1-4139C4B1FF34}
+	EndGlobalSection
+EndGlobal
