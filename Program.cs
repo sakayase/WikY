@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
-using WikY.DbContexts;
+using WikYModels.DbContexts;
 using WikYModels.Models;
-using WikY.Controllers;
+using WikYRepositories.IRepositories;
+using WikYRepositories.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,9 @@ builder.Services.AddDbContext<WikYDbContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString("WikY"));
 });
 
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
+
 builder.Services.AddControllers().AddJsonOptions(o =>
 {
     o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -45,8 +49,6 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-app.MapIdentityApi<User>();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -59,7 +61,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.MapArticleEndpoints();
 
 app.Run();

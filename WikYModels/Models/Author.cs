@@ -10,6 +10,6 @@ namespace WikYModels.Models
         public required string UserName { get; set; }
         public IEnumerable<Article>? Articles { get; set; }
         public IEnumerable<Comment>? Comments { get; set; }
-
+        public DateOnly BirthDate { get; set; }
     }
 }

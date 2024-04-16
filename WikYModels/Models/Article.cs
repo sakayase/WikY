@@ -17,5 +17,5 @@ namespace WikYModels.Models
         public IEnumerable<Comment>? Comments { get; set; }
     }
 
-    public enum Priority { Normale, Haute }
+    public enum Priority { Normal, High }
 }

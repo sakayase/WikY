@@ -4,7 +4,7 @@ using System.Reflection.Metadata;
 using WikYModels.Interface;
 using WikYModels.Models;
 
-namespace WikY.DbContexts
+namespace WikYModels.DbContexts
 {
     public class WikYDbContext : IdentityDbContext<User>
     {
