@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace WikYModels.Exceptions
 {
-    public class SignInException : Exception
+    public class LoginException : Exception
     {
-        public SignInException(string? message = null) : base(message)
+        public LoginException(string? message = null) : base(message)
         {
         }
     }

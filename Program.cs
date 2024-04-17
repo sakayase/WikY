@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using WikYModels.DbContexts;
@@ -13,11 +14,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddIdentityApiEndpoints<User>(c =>
+
+
+builder.Services.AddIdentityApiEndpoints<AppUser>(o =>
 {
-    
-    //c.Password
-}) // config mdp ...
+    o.Password.RequireDigit = false;
+    o.Password.RequireLowercase = false;
+    o.Password.RequireNonAlphanumeric = false;
+    o.Password.RequireUppercase = false;
+    o.Password.RequiredLength = 4;
+    o.Password.RequiredUniqueChars = 1;
+}) 
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<WikYDbContext>();
 

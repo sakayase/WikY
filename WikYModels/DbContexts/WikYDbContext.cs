@@ -6,7 +6,7 @@ using WikYModels.Models;
 
 namespace WikYModels.DbContexts
 {
-    public class WikYDbContext : IdentityDbContext<User>
+    public class WikYDbContext : IdentityDbContext<AppUser>
     {
         public DbSet<Author> Authors { get; set; }
         public DbSet<Article> Articles { get; set; }

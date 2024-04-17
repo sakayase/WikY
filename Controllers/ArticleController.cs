@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WikYModels.DbContexts;
 using WikYModels.Models;
+using WikYRepositories.DTOs.Article;
+using WikYRepositories.IRepositories;
 
 namespace WikY.Controllers
 {
@@ -14,37 +18,40 @@ namespace WikY.Controllers
     [ApiController]
     public class ArticleController : ControllerBase
     {
-        private readonly WikYDbContext _context;
-
-        public ArticleController(WikYDbContext context)
+        private readonly IArticleRepository _articleRepository;
+        private readonly UserManager<AppUser> _userManager;
+        public ArticleController(
+            IArticleRepository articleRepository,
+            UserManager<AppUser> userManager
+            )
         {
-            _context = context;
+            _articleRepository = articleRepository;
+            this._userManager = userManager;
         }
 
         // GET: api/Articles
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Article>>> GetArticles()
+        public async Task<ActionResult<IEnumerable<Article>>> GetArticles(int skip)
         {
-            return await _context.Articles.ToListAsync();
+            return await _articleRepository.GetAll(skip);
         }
 
         // GET: api/Articles/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Article>> GetArticle(int id)
         {
-            var article = await _context.Articles.FindAsync(id);
+            var article = await _articleRepository.GetFromId(id);
 
             if (article == null)
             {
                 return NotFound();
             }
-
             return article;
         }
 
         // PUT: api/Articles/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        /*[HttpPut("{id}")]
         public async Task<IActionResult> PutArticle(int id, Article article)
         {
             if (id != article.Id)
@@ -71,20 +78,32 @@ namespace WikY.Controllers
             }
 
             return NoContent();
-        }
+        }*/
 
         // POST: api/Articles
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Article>> PostArticle(Article article)
+        [Authorize]
+        public async Task<ActionResult<Article>> PostArticle(AddArticleDTO articleDTO)
         {
-            _context.Articles.Add(article);
-            await _context.SaveChangesAsync();
+
+            var appUser = await _userManager.GetUserAsync(HttpContext.User);
+            if (appUser == null)
+            {
+                return Unauthorized();
+            }
+            
+            if (appUser.Author.Id != articleDTO.AuthorID)
+            {
+                articleDTO.AuthorID = appUser.Author.Id;
+            }
+
+            Article article = await _articleRepository.AddArticle(articleDTO);
 
             return CreatedAtAction("GetArticle", new { id = article.Id }, article);
         }
 
-        // DELETE: api/Articles/5
+       /* // DELETE: api/Articles/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteArticle(int id)
         {
@@ -98,11 +117,7 @@ namespace WikY.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
+        }*/
 
-        private bool ArticleExists(int id)
-        {
-            return _context.Articles.Any(e => e.Id == id);
-        }
     }
 }

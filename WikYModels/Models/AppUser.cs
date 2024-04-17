@@ -2,7 +2,7 @@
 
 namespace WikYModels.Models
 {
-    public class User : IdentityUser
+    public class AppUser : IdentityUser
     {
         public Author Author { get; set; }
     }

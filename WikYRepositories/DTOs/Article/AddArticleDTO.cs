@@ -9,7 +9,7 @@ namespace WikYRepositories.DTOs.Article
 {
     public class AddArticleDTO
     {
-        public int AuthorID { get; set; }
+        public int? AuthorID { get; set; }
         public required string Content { get; set; }
         public Priority Priority { get; set; } = Priority.Normal;
         public int ThemeId {  get; set; }

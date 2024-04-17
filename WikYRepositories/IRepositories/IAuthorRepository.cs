@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WikYModels.Models;
@@ -11,7 +12,9 @@ namespace WikYRepositories.IRepositories
     public interface IAuthorRepository
     {
         Task<List<Author>> GetAll();
-        Task<Author> GetFromAuthorId(int AuthorId);
-        Task<User> Add(AddAuthorDTO authorDTO);
+        Task<Author?> GetFromAuthorId(int AuthorId);
+        Task<AppUser> SignIn(AddAuthorDTO authorDTO);
+        Task<AppUser> LogIn(LoginAuthorDTO authorDTO);
+        Task LogOut();
     }
 }
