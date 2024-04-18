@@ -5,6 +5,8 @@ using WikYModels.DbContexts;
 using WikYModels.Exceptions;
 using WikYModels.Models;
 using WikYRepositories.DTOs.Article;
+using WikYRepositories.DTOs.Author;
+using WikYRepositories.DTOs.Theme;
 using WikYRepositories.IRepositories;
 
 namespace WikYRepositories.Repositories
@@ -44,12 +46,12 @@ namespace WikYRepositories.Repositories
                 .Include(a => a.Theme)
                 .Select(a => new GetArticleDTO()
                 {
-                    Author = new GetArticleAuthorDTO()
+                    Author = new GetAuthorDTO()
                     {
                         id = a.Author.Id,
                         UserName = a.Author.UserName,
                     },
-                    Theme = a.Theme != null ? new GetArticleThemeDTO()
+                    Theme = a.Theme != null ? new GetThemeDTO()
                     {
                         id = a.Theme.Id,
                         Name = a.Theme.Name,
@@ -58,7 +60,7 @@ namespace WikYRepositories.Repositories
                     { 
                         id = c.Id, 
                         Content = c.Content,
-                        ArticleAuthor = new GetArticleAuthorDTO() 
+                        ArticleAuthor = new GetAuthorDTO() 
                         { 
                             id = c.Author.Id, 
                             UserName = c.Author.UserName
@@ -81,7 +83,7 @@ namespace WikYRepositories.Repositories
                 .OrderByDescending(a => a.Priority)
                 .Select(a => new GetListArticleDTO()
                 {
-                    Author = new GetArticleAuthorDTO()
+                    Author = new GetAuthorDTO()
                     {
                         id = a.Author.Id,
                         UserName = a.Author.UserName
@@ -91,7 +93,7 @@ namespace WikYRepositories.Repositories
                     Id = a.Id,
                     Priority = a.Priority,
                     UpdatedAt = a.UpdatedAt,
-                    Theme = new GetArticleThemeDTO()
+                    Theme = new GetThemeDTO()
                     {
                         id = a.Theme.Id,
                         Name = a.Theme.Name
@@ -108,7 +110,7 @@ namespace WikYRepositories.Repositories
                 .Take(3)
                 .Select(a => new GetListArticleDTO()
                 {
-                    Author = new GetArticleAuthorDTO()
+                    Author = new GetAuthorDTO()
                     {
                         id = a.Author.Id,
                         UserName = a.Author.UserName
@@ -118,7 +120,7 @@ namespace WikYRepositories.Repositories
                     Id = a.Id,
                     Priority = a.Priority,
                     UpdatedAt = a.UpdatedAt,
-                    Theme = new GetArticleThemeDTO()
+                    Theme = new GetThemeDTO()
                     {
                         id = a.Theme.Id,
                         Name = a.Theme.Name
@@ -136,7 +138,7 @@ namespace WikYRepositories.Repositories
                 .OrderByDescending(a => a.Priority)
                 .Select(a => new GetListArticleDTO()
                 {
-                    Author = new GetArticleAuthorDTO()
+                    Author = new GetAuthorDTO()
                     {
                         id = a.Author.Id,
                         UserName = a.Author.UserName
@@ -146,7 +148,7 @@ namespace WikYRepositories.Repositories
                     Id = a.Id,
                     Priority = a.Priority,
                     UpdatedAt = a.UpdatedAt,
-                    Theme = new GetArticleThemeDTO()
+                    Theme = new GetThemeDTO()
                     {
                         id = a.Theme.Id,
                         Name = a.Theme.Name

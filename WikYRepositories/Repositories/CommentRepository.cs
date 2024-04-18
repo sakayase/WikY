@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WikYModels.DbContexts;
 using WikYModels.Exceptions;
 using WikYModels.Models;
+using WikYRepositories.DTOs.Author;
 using WikYRepositories.DTOs.Comment;
 using WikYRepositories.IRepositories;
 
@@ -15,7 +16,7 @@ namespace WikYRepositories.Repositories
 {
     public class CommentRepository : ICommentRepository
     {
-        WikYDbContext _dbContext;
+        private readonly WikYDbContext _dbContext;
 
         public CommentRepository(
             WikYDbContext dbContext
@@ -51,27 +52,84 @@ namespace WikYRepositories.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Comment>> GetCommentsFromArticle(int ArticleId)
+        public async Task<List<GetCommentDTO>> GetCommentsFromArticle(int ArticleId)
         {
-            List<Comment> comments = await _dbContext.Comments
+            List<GetCommentDTO> comments = await _dbContext.Comments
                 .Include(c => c.Article)
                 .Where(c => c.Article.Id == ArticleId)
+                .Select(c => new GetCommentDTO() 
+                { 
+                    Author = new GetAuthorDTO() 
+                    { 
+                        id = c.Author.Id, 
+                        UserName = c.Author.UserName 
+                    }, 
+                    Content = c.Content, 
+                    Id= c.Id, 
+                    CreatedAt = c.CreatedAt, 
+                    UpdatedAt = c.UpdatedAt 
+                })
                 .ToListAsync();
             return comments;
         }
 
-        public async Task<List<Comment>> GetCommentsFromUser(AppUser AppUser)
+        public async Task<List<GetCommentDTO>> GetCommentsFromUser(AppUser AppUser)
         {
-            List<Comment> comments = await _dbContext.Comments
+            List<GetCommentDTO> comments = await _dbContext.Comments
                 .Include(c => c.Author)
                 .Where(c => c.Author.Id == AppUser.Author.Id)
+                .Select(c => new GetCommentDTO()
+                {
+                    Author = new GetAuthorDTO()
+                    {
+                        id = c.Author.Id,
+                        UserName = c.Author.UserName
+                    },
+                    Content = c.Content,
+                    Id = c.Id,
+                    CreatedAt = c.CreatedAt,
+                    UpdatedAt = c.UpdatedAt
+                })
                 .ToListAsync();
             return comments;
         }
-        public async Task<List<Comment>> GetAll()
+
+        public async Task<List<GetCommentDTO>> GetCommentsFromAuthorId(int AuthorId)
         {
-            List<Comment> comments = await _dbContext.Comments
+            List<GetCommentDTO> comments = await _dbContext.Comments
                 .Include(c => c.Author)
+                .Where(c => c.Author.Id == AuthorId)
+                .Select(c => new GetCommentDTO()
+                {
+                    Author = new GetAuthorDTO()
+                    {
+                        id = c.Author.Id,
+                        UserName = c.Author.UserName
+                    },
+                    Content = c.Content,
+                    Id = c.Id,
+                    CreatedAt = c.CreatedAt,
+                    UpdatedAt = c.UpdatedAt
+                })
+                .ToListAsync();
+            return comments;
+        }
+        public async Task<List<GetCommentDTO>> GetAll()
+        {
+            List<GetCommentDTO> comments = await _dbContext.Comments
+                .Include(c => c.Author)
+                .Select(c => new GetCommentDTO()
+                {
+                    Author = new GetAuthorDTO()
+                    {
+                        id = c.Author.Id,
+                        UserName = c.Author.UserName
+                    },
+                    Content = c.Content,
+                    Id = c.Id,
+                    CreatedAt = c.CreatedAt,
+                    UpdatedAt = c.UpdatedAt
+                })
                 .ToListAsync();
             return comments;
         }
@@ -99,9 +157,20 @@ namespace WikYRepositories.Repositories
             return comment;
         }
 
-        public async Task<Comment?> GetComment(int CommentId)
+        public async Task<GetCommentDTO?> GetComment(int CommentId)
         {
-            return await _dbContext.Comments.FirstOrDefaultAsync(a => a.Id == CommentId);
+            return await _dbContext.Comments.Select(c => new GetCommentDTO()
+            {
+                Author = new GetAuthorDTO()
+                {
+                    id = c.Author.Id,
+                    UserName = c.Author.UserName
+                },
+                Content = c.Content,
+                Id = c.Id,
+                CreatedAt = c.CreatedAt,
+                UpdatedAt = c.UpdatedAt
+            }).FirstOrDefaultAsync(a => a.Id == CommentId);
         }
     }
 }

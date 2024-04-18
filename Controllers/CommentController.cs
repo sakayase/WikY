@@ -16,7 +16,7 @@ using WikYRepositories.Repositories;
 
 namespace WikY.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class CommentController : ControllerBase
     {
@@ -37,13 +37,13 @@ namespace WikY.Controllers
 
         // GET: api/Comments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
+        public async Task<ActionResult<List<GetCommentDTO>>> GetComments()
         {
             return await _commentRepository.GetAll();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetComment(int id)
+        public async Task<ActionResult<List<GetCommentDTO>>> GetComment(int id)
         {
             return await _commentRepository.GetAll();
         }
@@ -51,7 +51,7 @@ namespace WikY.Controllers
         // GET: api/Comments/5
         [HttpGet("GetCommentFromUser")]
         [Authorize]
-        public async Task<ActionResult<List<Comment>>> GetCommentFromUser()
+        public async Task<ActionResult<List<GetCommentDTO>>> GetCommentFromUser()
         {
             AppUser AppUser = await GetConnectedUser();
             return await _commentRepository.GetCommentsFromUser(AppUser);
@@ -59,7 +59,7 @@ namespace WikY.Controllers
 
         
         [HttpGet("GetCommentFromArticle/{ArticleId}")]
-        public async Task<ActionResult<List<Comment>>> GetCommentFromArticle(int ArticleId)
+        public async Task<ActionResult<List<GetCommentDTO>>> GetCommentFromArticle(int ArticleId)
         {
             return await _commentRepository.GetCommentsFromArticle(ArticleId);
         }

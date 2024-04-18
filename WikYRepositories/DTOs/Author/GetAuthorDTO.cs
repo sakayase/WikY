@@ -1,6 +1,6 @@
-﻿namespace WikYRepositories.DTOs.Article
+﻿namespace WikYRepositories.DTOs.Author
 {
-    public class GetArticleAuthorDTO
+    public class GetAuthorDTO
     {
         public required string UserName { get; set; }
         public required int id { get; set; }

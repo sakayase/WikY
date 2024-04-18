@@ -12,9 +12,10 @@ namespace WikYRepositories.IRepositories
 {
     public interface ICommentRepository
     {
-        Task<List<Comment>> GetAll();
-        Task<List<Comment>> GetCommentsFromUser(AppUser AppUser);
-        Task<List<Comment>> GetCommentsFromArticle(int ArticleId);
+        Task<List<GetCommentDTO>> GetAll();
+        Task<List<GetCommentDTO>> GetCommentsFromUser(AppUser AppUser);
+        Task<List<GetCommentDTO>> GetCommentsFromAuthorId(int AuthorId);
+        Task<List<GetCommentDTO>> GetCommentsFromArticle(int ArticleId);
         Task<Comment> CreateComment(AppUser AppUser, AddCommentDTO CommentDTO);
         Task<Comment> UpdateComment(AppUser AppUser, UpdateCommentDTO commentDTO);
         Task DeleteComment(AppUser AppUser, int CommentId);

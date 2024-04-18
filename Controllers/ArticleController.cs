@@ -47,7 +47,7 @@ namespace WikY.Controllers
             return await _articleRepository.GetAll(skip);
         }
 
-        [HttpGet]
+        [HttpGet(template:"{AuthorId}")]
         public async Task<ActionResult<IEnumerable<GetListArticleDTO>>> GetArticlesFromAuthorId(int AuthorId)
         {
             return await _articleRepository.GetFromAuthor(AuthorId);
