@@ -35,6 +35,7 @@ namespace WikY.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<GetListArticleDTO>>> GetLatestArticles()
         {
             return await _articleRepository.GetLatestArticles();
@@ -42,12 +43,14 @@ namespace WikY.Controllers
 
         // GET: api/Articles
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<GetListArticleDTO>>> GetArticles(int skip)
         {
             return await _articleRepository.GetAll(skip);
         }
 
         [HttpGet(template:"{AuthorId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<GetListArticleDTO>>> GetArticlesFromAuthorId(int AuthorId)
         {
             return await _articleRepository.GetFromAuthor(AuthorId);
@@ -55,6 +58,8 @@ namespace WikY.Controllers
 
         // GET: api/Articles/5
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<GetArticleDTO>> GetArticle(int id)
         {
             var article = await _articleRepository.GetFromId(id);
@@ -70,6 +75,9 @@ namespace WikY.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateArticle(int id, UpdateArticleDTO articleDTO)
         {
             AppUser appUser = await GetConnectedUser();
@@ -86,6 +94,9 @@ namespace WikY.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> UpdateArticleAdmin(int id, UpdateArticleAdminDTO articleDTO)
         {
             AppUser appUser = await GetConnectedUser();
@@ -102,6 +113,8 @@ namespace WikY.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Article>> PostArticle(AddArticleDTO articleDTO)
         {
             AppUser appUser = await GetConnectedUser();
@@ -113,6 +126,8 @@ namespace WikY.Controllers
         // DELETE: api/Articles/5
         [HttpDelete("Delete/{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteComment(int id)
         {
             AppUser appUser = await GetConnectedUser();

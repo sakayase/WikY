@@ -37,20 +37,27 @@ namespace WikY.Controllers
 
         // GET: api/Comments
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GetCommentDTO>>> GetComments()
         {
             return await _commentRepository.GetAll();
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List<GetCommentDTO>>> GetComment(int id)
         {
-            return await _commentRepository.GetAll();
+            GetCommentDTO? commentDTO = await _commentRepository.GetComment(id);
+            if( commentDTO == null ) { return NotFound(); }
+            return Ok(commentDTO);
         }
 
         // GET: api/Comments/5
         [HttpGet("GetCommentFromUser")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GetCommentDTO>>> GetCommentFromUser()
         {
             AppUser AppUser = await GetConnectedUser();
@@ -59,6 +66,7 @@ namespace WikY.Controllers
 
         
         [HttpGet("GetCommentFromArticle/{ArticleId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GetCommentDTO>>> GetCommentFromArticle(int ArticleId)
         {
             return await _commentRepository.GetCommentsFromArticle(ArticleId);
@@ -70,6 +78,8 @@ namespace WikY.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("UpdateComment/{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> PutComment(int id, UpdateCommentDTO commentDTO)
         {
             AppUser appUser = await GetConnectedUser();
@@ -86,6 +96,8 @@ namespace WikY.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Comment>> PostComment(AddCommentDTO commentDTO)
         {
             AppUser appUser = await GetConnectedUser();
@@ -98,6 +110,8 @@ namespace WikY.Controllers
         // DELETE: api/Comments/5
         [HttpDelete("Delete/{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeleteComment(int id)
         {
             AppUser appUser = await GetConnectedUser();

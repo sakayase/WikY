@@ -13,6 +13,7 @@ namespace WikYRepositories.IRepositories
     public interface ICommentRepository
     {
         Task<List<GetCommentDTO>> GetAll();
+        Task<GetCommentDTO?> GetComment(int CommentId);
         Task<List<GetCommentDTO>> GetCommentsFromUser(AppUser AppUser);
         Task<List<GetCommentDTO>> GetCommentsFromAuthorId(int AuthorId);
         Task<List<GetCommentDTO>> GetCommentsFromArticle(int ArticleId);

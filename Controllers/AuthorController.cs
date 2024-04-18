@@ -40,6 +40,8 @@ namespace WikY.Controllers
 
         [HttpGet()]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAppUser()
         {
             var appUser = await GetConnectedUser();
@@ -48,7 +50,8 @@ namespace WikY.Controllers
 
 
         [HttpPost()]
-        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SignIn(AddAuthorDTO userDTO)
         {
             try
@@ -64,6 +67,8 @@ namespace WikY.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> LogIn(LoginAuthorDTO userDTO)
         {
             try
@@ -78,6 +83,9 @@ namespace WikY.Controllers
 
         [HttpGet()]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> LogOut()
         {
             try
@@ -93,6 +101,7 @@ namespace WikY.Controllers
 
         // GET: api/Authors
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Author>>> GetAuthors()
         {
             return await _authorRepository.GetAll();
@@ -100,6 +109,7 @@ namespace WikY.Controllers
 
         // GET: api/Authors/5
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<Author>> GetAuthor(int id)
         {
             var author = await _authorRepository.GetFromAuthorId(id);
@@ -112,6 +122,10 @@ namespace WikY.Controllers
         }
         [HttpDelete]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteSelf()
         {
             AppUser appUser = await GetConnectedUser();
@@ -133,6 +147,10 @@ namespace WikY.Controllers
         // DELETE: api/Authors/5
         [HttpDelete("{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteAuthorAdmin(int id)
         {
             AppUser appUser = await GetConnectedUser();
@@ -169,8 +187,9 @@ namespace WikY.Controllers
             return appUser;
         }
 
-        /*[AllowAnonymous]
         [HttpPost]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateRoleAdmin()
         {
             if (!await _roleManager.RoleExistsAsync("ADMIN"))
@@ -179,18 +198,20 @@ namespace WikY.Controllers
 
                 if (result.Succeeded)
                 {
-                    return Ok();
+                    return Ok("Created");
                 }
                 else
                     return Problem(string.Join(" | ", result.Errors.Select(e => e.Description)));
 
             }
 
-            return Ok();
-        }*/
+            return Ok("Already Created");
+        }
 
         [HttpGet]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddUserToRoleAdmin()
         {
             var appUser = await GetConnectedUser();
@@ -201,6 +222,8 @@ namespace WikY.Controllers
         }
         [HttpGet]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> IsUserInRole()
         {
             var appUser = await GetConnectedUser();

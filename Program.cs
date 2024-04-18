@@ -53,6 +53,17 @@ builder.Services.AddSwaggerGen(c =>
         Name = "Authorization",
         Type = SecuritySchemeType.ApiKey
     });
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "WikY API",
+        Description = "API Allowing to register an account to post comments or articles",
+        Contact = new OpenApiContact
+        {
+            Name = "Simon Ponitzki",
+            Url = new Uri("mailto:simon.ponitzki@gmail.com"),
+        },
+    });
 });
 
 var app = builder.Build();
