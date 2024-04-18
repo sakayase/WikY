@@ -16,7 +16,7 @@ namespace WikYRepositories.Repositories
         WikYDbContext _dbContext;
 
         public ArticleRepository(
-            WikYDbContext dbContext 
+            WikYDbContext dbContext
             )
         {
             this._dbContext = dbContext;
@@ -27,10 +27,11 @@ namespace WikYRepositories.Repositories
             Author author = appUser.Author;
             Theme theme = await _dbContext.Themes
                 .FirstAsync(t => t.Id == articleDTO.ThemeId);
-            Article article = new () { 
-                Author = author, 
-                Content = articleDTO.Content, 
-                Priority = articleDTO.Priority, 
+            Article article = new()
+            {
+                Author = author,
+                Content = articleDTO.Content,
+                Priority = articleDTO.Priority,
                 Theme = theme
             };
 
@@ -56,15 +57,15 @@ namespace WikYRepositories.Repositories
                         id = a.Theme.Id,
                         Name = a.Theme.Name,
                     } : null,
-                    Comments = a.Comments!.Select(c => new GetArticleCommentDTO() 
-                    { 
-                        id = c.Id, 
+                    Comments = a.Comments!.Select(c => new GetArticleCommentDTO()
+                    {
+                        id = c.Id,
                         Content = c.Content,
-                        ArticleAuthor = new GetAuthorDTO() 
-                        { 
-                            id = c.Author.Id, 
+                        ArticleAuthor = new GetAuthorDTO()
+                        {
+                            id = c.Author.Id,
                             UserName = c.Author.UserName
-                        } 
+                        }
                     }).ToList(),
                     Content = a.Content,
                     CreatedAt = a.CreatedAt,
@@ -99,7 +100,7 @@ namespace WikYRepositories.Repositories
                         Name = a.Theme.Name
                     }
                 }).ToListAsync();
-                
+
         }
         public Task<List<GetListArticleDTO>> GetLatestArticles()
         {
@@ -160,7 +161,7 @@ namespace WikYRepositories.Repositories
         {
             Article? article = await _dbContext.Articles
                 .Include(a => a.Author)
-                .FirstOrDefaultAsync(a => a.Id ==  articleDTO.Id);
+                .FirstOrDefaultAsync(a => a.Id == articleDTO.Id);
             if (article == null)
             {
                 throw new UpdateEntryException(message: "The article does not exist.");
@@ -176,7 +177,7 @@ namespace WikYRepositories.Repositories
             if (articleDTO.ThemeId != null)
             {
                 Theme? theme = await _dbContext.Themes.FirstOrDefaultAsync(t => t.Id == articleDTO.ThemeId);
-                if(theme == null)
+                if (theme == null)
                 {
                     throw new UpdateEntryException(message: "Theme not found.");
                 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WikYModels.Models;
+﻿using WikYModels.Models;
 using WikYRepositories.DTOs.Author;
 using WikYRepositories.DTOs.Theme;
 

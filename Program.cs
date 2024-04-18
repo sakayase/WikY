@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using WikYModels.DbContexts;
@@ -24,7 +23,7 @@ builder.Services.AddIdentityApiEndpoints<AppUser>(o =>
     o.Password.RequireUppercase = false;
     o.Password.RequiredLength = 4;
     o.Password.RequiredUniqueChars = 1;
-}) 
+})
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<WikYDbContext>();
 

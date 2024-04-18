@@ -1,21 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol;
-using WikYModels.DbContexts;
 using WikYModels.Exceptions;
 using WikYModels.Models;
 using WikYRepositories.DTOs.Author;
 using WikYRepositories.IRepositories;
-using WikYRepositories.Repositories;
 
 namespace WikY.Controllers
 {
@@ -75,7 +64,8 @@ namespace WikY.Controllers
             {
                 AppUser loggedUser = await _authorRepository.LogIn(userDTO);
                 return Ok($"User logged ({loggedUser.UserName})");
-            } catch (LoginException e) 
+            }
+            catch (LoginException e)
             {
                 return Problem(e.Message);
             }
@@ -117,7 +107,7 @@ namespace WikY.Controllers
             if (author == null)
             {
                 return NotFound();
-            } 
+            }
             return author;
         }
         [HttpDelete]
@@ -156,15 +146,17 @@ namespace WikY.Controllers
             AppUser appUser = await GetConnectedUser();
             if (!await _userManager.IsInRoleAsync(appUser, "ADMIN"))
             {
-                    return Forbid();
+                return Forbid();
             }
             try
             {
                 await _authorRepository.DeleteUserFromId(id);
-            } catch (NotFoundException e)
+            }
+            catch (NotFoundException e)
             {
                 return NotFound(e.Message);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 return Problem(e.Message);
             }

@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WikYModels.DbContexts;
 using WikYModels.Exceptions;
 using WikYModels.Models;
 using WikYRepositories.DTOs.Article;
 using WikYRepositories.IRepositories;
-using WikYRepositories.Repositories;
 
 namespace WikY.Controllers
 {
@@ -49,7 +41,7 @@ namespace WikY.Controllers
             return await _articleRepository.GetAll(skip);
         }
 
-        [HttpGet(template:"{AuthorId}")]
+        [HttpGet(template: "{AuthorId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<GetListArticleDTO>>> GetArticlesFromAuthorId(int AuthorId)
         {
@@ -118,7 +110,7 @@ namespace WikY.Controllers
         public async Task<ActionResult<Article>> PostArticle(AddArticleDTO articleDTO)
         {
             AppUser appUser = await GetConnectedUser();
-            Article article = await _articleRepository.AddArticle(appUser, articleDTO);;
+            Article article = await _articleRepository.AddArticle(appUser, articleDTO); ;
 
             return CreatedAtAction("GetArticle", new { id = article.Id }, article);
         }

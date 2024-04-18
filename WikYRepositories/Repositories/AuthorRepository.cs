@@ -26,10 +26,10 @@ namespace WikYRepositories.Repositories
 
         public async Task<AppUser> SignIn(AddAuthorDTO authorDTO)
         {
-            if (authorDTO.BirthDate > DateOnly.FromDateTime(DateTime.Now.AddYears(-18))) 
+            if (authorDTO.BirthDate > DateOnly.FromDateTime(DateTime.Now.AddYears(-18)))
             {
                 throw new SignInException(message: "You need to be 18 or older to register.");
-            
+
             }
 
             var User = new AppUser { UserName = authorDTO.UserName }; // Add other properties if needed
@@ -56,7 +56,8 @@ namespace WikYRepositories.Repositories
             if (result.Succeeded)
             {
                 return AppUser;
-            } else
+            }
+            else
             {
                 throw new LoginException(message: "The user doesnt exist, or the password doesnst match.");
             }
@@ -92,13 +93,13 @@ namespace WikYRepositories.Repositories
         public async Task DeleteUserFromId(int AuthorId)
         {
             Author author = await _dbContext.Authors
-                .FirstOrDefaultAsync(a => a.Id == AuthorId) 
+                .FirstOrDefaultAsync(a => a.Id == AuthorId)
                 ?? throw new NotFoundException("Author not found");
             AppUser appUser = await _dbContext.AppUser
                 .Include(a => a.Author)
-                .FirstOrDefaultAsync(a => a.Author.Id == author.Id) 
+                .FirstOrDefaultAsync(a => a.Author.Id == author.Id)
                 ?? throw new NotFoundException("User not found");
-            
+
             await _userManager.DeleteAsync(appUser);
             _dbContext.Remove(author);
             await _dbContext.SaveChangesAsync();

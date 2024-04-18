@@ -1,10 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WikYModels.DbContexts;
 using WikYModels.Exceptions;
 using WikYModels.Models;
@@ -57,17 +51,17 @@ namespace WikYRepositories.Repositories
             List<GetCommentDTO> comments = await _dbContext.Comments
                 .Include(c => c.Article)
                 .Where(c => c.Article.Id == ArticleId)
-                .Select(c => new GetCommentDTO() 
-                { 
-                    Author = new GetAuthorDTO() 
-                    { 
-                        id = c.Author.Id, 
-                        UserName = c.Author.UserName 
-                    }, 
-                    Content = c.Content, 
-                    Id= c.Id, 
-                    CreatedAt = c.CreatedAt, 
-                    UpdatedAt = c.UpdatedAt 
+                .Select(c => new GetCommentDTO()
+                {
+                    Author = new GetAuthorDTO()
+                    {
+                        id = c.Author.Id,
+                        UserName = c.Author.UserName
+                    },
+                    Content = c.Content,
+                    Id = c.Id,
+                    CreatedAt = c.CreatedAt,
+                    UpdatedAt = c.UpdatedAt
                 })
                 .ToListAsync();
             return comments;
