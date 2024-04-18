@@ -1,11 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using WikYModels.DbContexts;
 using WikYModels.Exceptions;
 using WikYModels.Models;
@@ -85,9 +79,29 @@ namespace WikYRepositories.Repositories
             return await _dbContext.Authors.FindAsync(AuthorId);
         }
 
-        public Task<Author> GetFromId(int AuthorId)
+        public async Task<AppUser?> GetAppUserWithAuthor(string appUserId)
         {
-            throw new NotImplementedException();
+            return await _dbContext.AppUser.Include(a => a.Author).FirstOrDefaultAsync(a => a.Id == appUserId);
+        }
+
+        public async Task<Author> GetFromId(int AuthorId)
+        {
+            return await _dbContext.Authors.ElementAtAsync(AuthorId);
+        }
+
+        public async Task DeleteUserFromId(int AuthorId)
+        {
+            Author author = await _dbContext.Authors
+                .FirstOrDefaultAsync(a => a.Id == AuthorId) 
+                ?? throw new NotFoundException("Author not found");
+            AppUser appUser = await _dbContext.AppUser
+                .Include(a => a.Author)
+                .FirstOrDefaultAsync(a => a.Author.Id == author.Id) 
+                ?? throw new NotFoundException("User not found");
+            
+            await _userManager.DeleteAsync(appUser);
+            _dbContext.Remove(author);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

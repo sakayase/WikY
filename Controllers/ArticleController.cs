@@ -8,37 +8,54 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WikYModels.DbContexts;
+using WikYModels.Exceptions;
 using WikYModels.Models;
 using WikYRepositories.DTOs.Article;
 using WikYRepositories.IRepositories;
+using WikYRepositories.Repositories;
 
 namespace WikY.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ArticleController : ControllerBase
     {
         private readonly IArticleRepository _articleRepository;
+        private readonly IAuthorRepository _authorRepository;
         private readonly UserManager<AppUser> _userManager;
         public ArticleController(
             IArticleRepository articleRepository,
+            IAuthorRepository authorRepository,
             UserManager<AppUser> userManager
             )
         {
             _articleRepository = articleRepository;
+            _authorRepository = authorRepository;
             this._userManager = userManager;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<GetListArticleDTO>>> GetLatestArticles()
+        {
+            return await _articleRepository.GetLatestArticles();
         }
 
         // GET: api/Articles
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Article>>> GetArticles(int skip)
+        public async Task<ActionResult<IEnumerable<GetListArticleDTO>>> GetArticles(int skip)
         {
             return await _articleRepository.GetAll(skip);
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<GetListArticleDTO>>> GetArticlesFromAuthorId(int AuthorId)
+        {
+            return await _articleRepository.GetFromAuthor(AuthorId);
+        }
+
         // GET: api/Articles/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Article>> GetArticle(int id)
+        public async Task<ActionResult<GetArticleDTO>> GetArticle(int id)
         {
             var article = await _articleRepository.GetFromId(id);
 
@@ -51,34 +68,35 @@ namespace WikY.Controllers
 
         // PUT: api/Articles/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        /*[HttpPut("{id}")]
-        public async Task<IActionResult> PutArticle(int id, Article article)
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateArticle(int id, UpdateArticleDTO articleDTO)
         {
-            if (id != article.Id)
+            AppUser appUser = await GetConnectedUser();
+            if (id != articleDTO.Id)
             {
                 return BadRequest();
             }
-
-            _context.Entry(article).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ArticleExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _articleRepository.UpdateArticle(appUser.Author.Id, articleDTO);
 
             return NoContent();
-        }*/
+        }
+
+        // PUT: api/Articles/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> UpdateArticleAdmin(int id, UpdateArticleAdminDTO articleDTO)
+        {
+            AppUser appUser = await GetConnectedUser();
+            if (id != articleDTO.Id)
+            {
+                return BadRequest();
+            }
+            await _articleRepository.UpdateArticleAdmin(articleDTO);
+
+            return NoContent();
+        }
 
         // POST: api/Articles
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -86,38 +104,38 @@ namespace WikY.Controllers
         [Authorize]
         public async Task<ActionResult<Article>> PostArticle(AddArticleDTO articleDTO)
         {
-
-            var appUser = await _userManager.GetUserAsync(HttpContext.User);
-            if (appUser == null)
-            {
-                return Unauthorized();
-            }
-            
-            if (appUser.Author.Id != articleDTO.AuthorID)
-            {
-                articleDTO.AuthorID = appUser.Author.Id;
-            }
-
-            Article article = await _articleRepository.AddArticle(articleDTO);
+            AppUser appUser = await GetConnectedUser();
+            Article article = await _articleRepository.AddArticle(appUser, articleDTO);;
 
             return CreatedAtAction("GetArticle", new { id = article.Id }, article);
         }
 
-       /* // DELETE: api/Articles/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteArticle(int id)
+        // DELETE: api/Articles/5
+        [HttpDelete("Delete/{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteComment(int id)
         {
-            var article = await _context.Articles.FindAsync(id);
-            if (article == null)
-            {
-                return NotFound();
-            }
+            AppUser appUser = await GetConnectedUser();
 
-            _context.Articles.Remove(article);
-            await _context.SaveChangesAsync();
+            await _articleRepository.DeleteArticleFromId(appUser, id);
 
             return NoContent();
-        }*/
+        }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<AppUser> GetConnectedUser()
+        {
+            string? userId = _userManager.GetUserId(User);
+            if (userId == null)
+            {
+                throw new GetConnectedUserException();
+            }
+            var appUser = await _authorRepository.GetAppUserWithAuthor(userId);
+            if (appUser == null)
+            {
+                throw new GetConnectedUserException();
+            }
+            return appUser;
+        }
     }
 }

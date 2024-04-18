@@ -36,6 +36,7 @@ builder.Services.AddDbContext<WikYDbContext>(o =>
 
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 builder.Services.AddControllers().AddJsonOptions(o =>
 {

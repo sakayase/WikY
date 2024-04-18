@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WikYModels.DbContexts;
 using WikYModels.Models;
+using WikYRepositories.DTOs.Theme;
 
 namespace WikY.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "ADMIN")]
     public class ThemeController : ControllerBase
     {
         private readonly WikYDbContext _context;
@@ -76,8 +79,9 @@ namespace WikY.Controllers
         // POST: api/Themes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Theme>> PostTheme(Theme theme)
+        public async Task<ActionResult<Theme>> PostTheme(AddThemeDTO themeDTO)
         {
+            Theme theme = new() { Name = themeDTO.Name };
             _context.Themes.Add(theme);
             await _context.SaveChangesAsync();
 
