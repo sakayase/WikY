@@ -13,7 +13,7 @@ namespace WikYRepositories.Repositories
 {
     public class ArticleRepository : IArticleRepository
     {
-        WikYDbContext _dbContext;
+        private readonly WikYDbContext _dbContext;
 
         public ArticleRepository(
             WikYDbContext dbContext

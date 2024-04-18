@@ -10,9 +10,9 @@ namespace WikYRepositories.Repositories
 {
     public class AuthorRepository : IAuthorRepository
     {
-        WikYDbContext _dbContext;
-        UserManager<AppUser> _userManager;
-        SignInManager<AppUser> _signInManager;
+        private readonly WikYDbContext _dbContext;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
         public AuthorRepository(
             WikYDbContext dbContext,
             UserManager<AppUser> userManager,
